@@ -15,6 +15,7 @@ import taskdb.taskmanager.entity.Task;
 import taskdb.taskmanager.enums.TaskStatus;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +84,21 @@ public class TaskController {
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/pending/rand")
+    public List<TaskDTO> geRandtPendingTasks() {
+        List<Task> idleTasks = taskService.getAll().stream()
+                .filter(task -> task.getStatus() == TaskStatus.IDLE)
+                .collect(Collectors.toList());
+
+        Collections.shuffle(idleTasks);
+
+        return idleTasks.stream()
+                .limit(3)
+                .map(TaskMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+    
 
     @GetMapping("/department/{department}")
     public List<TaskDTO> getTasksByDepartment(@PathVariable String department) {

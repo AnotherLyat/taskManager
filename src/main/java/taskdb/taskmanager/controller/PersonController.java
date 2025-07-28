@@ -37,7 +37,7 @@ public class PersonController {
         return PersonMapper.toDTO(personService.savePerson(PersonMapper.toEntity(personDTO)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
         personService.deletePerson(id);
         return ResponseEntity.noContent().build();
