@@ -16,6 +16,7 @@ import taskdb.taskmanager.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ public class TaskController {
     @GetMapping("/all")
     public List<TaskDTO> getAllTasks() {
         return taskService.getAll().stream()
+                .sorted(Comparator.comparing(Task::getDeadline))
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -107,4 +109,36 @@ public class TaskController {
                 .map(TaskMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+
+    @GetMapping("/report")
+    public ResponseEntity<String> getTaskReport() {
+        List<Object[]> results = taskService.getTaskReportRaw();
+
+        if (results.isEmpty()) {
+            return ResponseEntity.ok("No departments found.");
+        }
+
+        StringBuilder report = new StringBuilder();
+
+        for (Object[] row : results) {
+            String department = (String) row[0];
+            Long finished = (Long) row[1];
+            Long unfinished = (Long) row[2];
+
+            report.append("Department: ").append(department).append("\n")
+                .append("Finished Tasks: ").append(finished).append("\n")
+                .append("Unfinished Tasks: ").append(unfinished).append("\n\n");
+        }
+
+        return ResponseEntity.ok(report.toString().trim());
+    }
+
+
+    @GetMapping("/summary")
+    public ResponseEntity<List<String>> getTaskSummaries() {
+        return ResponseEntity.ok(taskService.getTaskSummaries());
+    }
+
+    
 }

@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -97,4 +98,30 @@ public class TaskService {
     public List<Task> getTasksByDepartment(String department) {
         return taskRepository.findByDepartment(department);
     }
+
+    public List<Object[]> getTaskReportRaw() {
+        return taskRepository.countTasksByDepartment();
+    }
+
+    public List<String> getTaskSummaries() {
+    return taskRepository.findAllByOrderByDeadlineDesc().stream()
+            .map(task -> {
+                String status;
+                String horasGastas = "";
+
+                if (task.getAssignedPerson() != null) {
+                    status = "Encaminhado para " + task.getAssignedPerson().getName();
+                    horasGastas = "\n Tempo estimado de horas gastas: " + task.getAssignedPerson().getAverageTaskDuration() * task.getAssignedPerson().getTotalTasksCompleted();
+                } else {
+                    status = "Pendente";
+                }
+
+                return "Título: " + task.getTitle() +
+                       "\n Prazo: " + task.getDeadline() +
+                       "\n Status: " + status +
+                       horasGastas;
+            })
+            .collect(Collectors.toList());
+}
+
 }

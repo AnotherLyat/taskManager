@@ -99,7 +99,7 @@ will delete from the database the specified person with the specified id
 ```
 assign person of the specified ID to the task of the specified ID
 
-### Change Status
+### Change Status (put)
 ```
 /api/tasks/{taskId}/status/{status}
 ```
@@ -108,20 +108,32 @@ It will save the time when the state changes to Active and when the state change
 
 ps: i do see some loopholes in the logic, like setting to active twice to make the average smaller or how a task can be 'remembered' as completed multiple times, will need to solve those later
 
-### List IDLE
+### List IDLE (get)
 ```
 /api/tasks/pending
 ```
 Will list all tasks in the IDLE state
 
-### List 3 IDLE
+### List 3 IDLE (get)
 ```
 /api/tasks/pending/rand
 ```
 Will list 3 tasks in the IDLE state at random. I did not understand why it was asked, since number displayed could be controlled on the front part (which is not what i'm doing), but i did it 
 
-### List by department
+### List by department (get)
 ```
 /api/tasks/department/{department}
 ```
 will list all tasks in the specified department
+
+### Report (get)
+```
+/api/tasks/report
+```
+show all departments, number of finished and unfinished tasks for each as string
+
+### Summary (get)
+```
+/api/tasks/summary"
+```
+Show a summary of all tasks
