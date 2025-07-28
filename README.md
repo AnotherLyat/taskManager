@@ -1,4 +1,6 @@
-API for task management using Spring Framework
+API for task management using Spring Framework.
+used PostgreSQL as database, specifically named it taskdb.
+well, see/change application.properties if anything is needed
 
 # Commands
 
